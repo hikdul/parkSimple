@@ -1,4 +1,4 @@
-﻿
+﻿@using QRCoder;
 @{
     ViewData["Title"] = "BtnGenerarQr";
 }
@@ -6,5 +6,18 @@
 <h1>BtnGenerarQr</h1>
 
 
-<button asp-action="BtnGenerarQr" asp-controller="parking" class="btn btn-secondary justify-content-center"> <h1 class="display-1"> Generar QR!</h1>  </button>
+<button id="btnqr" class="btn btn-secondary justify-content-center"> <h1 class="display-1"> Generar QR!</h1>  </button>
 
+<img src="" id="imgQR" />
+
+
+
+<script>
+    document.getElementById("btnqr").addEventListener('click', () => {
+        console.log("ya casi");
+        $.get("DevolverQR/", data => {
+            document.getElementById("imgQR").src = 'data:image/png;base64,' + data;
+            console.log("generado");
+        })
+    });
+</script>
