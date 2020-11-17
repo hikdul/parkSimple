@@ -1,0 +1,53 @@
+﻿@model parking.Models.Costo
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<h4>Costo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Editar">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="nombre" hidden value="Original" class="form-control" />
+
+            <div class="form-group">
+                <label asp-for="hora" class="control-label"></label>
+                <input asp-for="hora" class="form-control" />
+                <span asp-validation-for="hora" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="f30" class="control-label"></label>
+                <input asp-for="f30" class="form-control" />
+                <span asp-validation-for="f30" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="f15" class="control-label"></label>
+                <input asp-for="f15" class="form-control" />
+                <span asp-validation-for="f15" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="f5" class="control-label"></label>
+                <input asp-for="f5" class="form-control" />
+                <span asp-validation-for="f5" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="nocturno" class="control-label"></label>
+                <input asp-for="nocturno" class="form-control" />
+                <span asp-validation-for="nocturno" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
