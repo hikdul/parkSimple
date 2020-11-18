@@ -54,13 +54,13 @@
               "target": "Package",
               "version": "[3.1.4, )"
             },
-            "QRCoder": {
-              "target": "Package",
-              "version": "[1.4.1, )"
-            },
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.8.2, )"
+            },
+            "itext7": {
+              "target": "Package",
+              "version": "[7.1.13, )"
             }
           },
           "imports": [

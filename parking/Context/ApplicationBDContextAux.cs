@@ -175,7 +175,7 @@ namespace Parking.Context
             parametros[1] = new SqlParameter("@horaO", insert.horaO);
             parametros[2] = new SqlParameter("@id", id);
 
-            return await CustomProcedures.GetByParameters<vehiculo>("postPark", conn, parametros);
+            return await CustomProcedures.GetByParameters<vehiculo>("SalidaVehiculo", conn, parametros);
         }
 
         internal async Task<bool> DeletePark(int id)

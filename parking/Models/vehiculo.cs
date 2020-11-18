@@ -20,5 +20,8 @@ namespace parking.Models
         public string fechaO { get; set; }
         public string horaO { get; set; }
 
+        /////// banderas
+        public string tiempo { get; set; }
+
     }
 }
