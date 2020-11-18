@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using parking.Models;
 using Parking.helper;
 using QRCoder;
+using parking.DataTransferObjects;
 
 namespace parking.Controllers
 {
@@ -141,7 +142,7 @@ namespace parking.Controllers
         /// </summary>
         /// <param name="textoQr"></param>
 
-        public vehiculo DevolverSalida(string textoQr)
+        public InfSalidaVehiculo DevolverSalida(string textoQr)
         {
             //formato del texto
             //nuevo.id.ToString() + "=>" + nuevo.horaI +"=>"+nuevo.horaI
@@ -157,11 +158,17 @@ namespace parking.Controllers
             salida.horaO = DateTime.Now.ToString("t");
 
             salida = HttpSolicitudes.PutAndGetHTTP<vehiculo>(_url+ "/salida", Int32.Parse(datos[0].Trim()), salida);
-            salida.tiempo = CalcularCosto(salida);
-
-            return salida;
+            //salida.tiempo = CalcularCosto(salida);
+           
+            
+            return CalcularCosto(salida);
 
         }
+
+        // =========================== ### ===========================
+        // calculo de datos para facturacion
+        // =========================== ### ===========================
+
         /// <summary>
         /// para calcular el valor total a pagar en base a mi costo
         ///  8:00 pm > tiempo nocturno > 8:00 am
@@ -172,7 +179,7 @@ namespace parking.Controllers
         /// </summary>
         /// <param name="vehiculo"></param>
         /// <returns></returns>
-        private string CalcularCosto(vehiculo vehiculo)
+        private InfSalidaVehiculo CalcularCosto(vehiculo vehiculo)
         {
 
             double valorACobrar = 0;
@@ -184,13 +191,31 @@ namespace parking.Controllers
             var Htotales = (fo - fi).ToString(@"dd\d\ hh\h\ mm\m\ ");
             string[] valores = Htotales.Split(" ");
 
-            //calculo minutos
+            //diferencia entre horas nomales y nocturnas
+
+            //calcular horas
+            int hours = Int32.Parse(valores[1].Substring(0, 2));
+            //calcular dias
+            int days = Int32.Parse(valores[0].Substring(0, 2));
+
+            int totalhoras = days * 24 + hours;
+            int horasNocturnas = tiempoNocturno(vehiculo);
+            int horasDiurnas = totalhoras - horasNocturnas;
+            //suma de horas por su costo 
+
+            valorACobrar += horasNocturnas * costo.nocturno;
+            valorACobrar += horasDiurnas * costo.hora;
+
+            //fracion en minutos
 
             int min = Int32.Parse( valores[2].Substring(0, 2));
 
             if (min < 59 && min > 30)
-            { 
-                valorACobrar += costo.hora;
+            {
+                if (costo.hora > (costo.f15 + costo.f30))
+                    valorACobrar += costo.f15 + costo.f30;
+                else 
+                    valorACobrar += costo.hora;
             }
             else if(min > 15 && min <=30)
             {
@@ -205,13 +230,20 @@ namespace parking.Controllers
                 valorACobrar += costo.f5;
             }
 
-            //calcular horas
-            int hours = Int32.Parse(valores[1].Substring(0, 2));
+            //lleno mi dto
 
-            //calcular dias
-            int days = Int32.Parse(valores[0].Substring(0, 2));
+            InfSalidaVehiculo endObj = new InfSalidaVehiculo()
+            {
+                tiempoTotal = Htotales,
+                horasDiurnas = horasDiurnas,
+                horasNocturnas = horasNocturnas,
+                MontoAPagar = valorACobrar
+            };
+
+
+
             //"tiempo": "01d 05h 07m "
-            return Htotales;
+            return endObj;
         }
         /// <summary>
         /// tiempo en horas nocturnas
@@ -221,51 +253,292 @@ namespace parking.Controllers
         private int tiempoNocturno(vehiculo vehiculo)
         {
 
+            int Inoche = 20;//la hora se coloca en formato militar 20 es igual a 8 de la noche esta es la hora de inicio del turno nocturno
+            int Fnoche = 7;//la hora se coloca en formato militar 7 es igual a 7 de la mañana  esta es la hora de fin del turno nocturno
+            int contadorHoras = 0;
+
+            int bandera = 0;
+
             string[] fechaI = vehiculo.fechaI.Split("/");
             string[] fechaO = vehiculo.fechaO.Split("/");
             string[] horaI = vehiculo.horaI.Split(":");
             string[] horaO = vehiculo.horaO.Split(":");
 
 
-            int yI = Int32.Parse(fechaI[0]);
+            int dI = Int32.Parse(fechaI[0]);
             int mI = Int32.Parse(fechaI[1]);
-            int dI = Int32.Parse(fechaI[2]);
+            int yI = Int32.Parse(fechaI[2]);
             int hI=  Int32.Parse(horaI[0]) ;
-            int mI=  Int32.Parse(horaI[1]) ;
-            int yO = Int32.Parse(fechaO[0]);
+            int minI=  Int32.Parse(horaI[1]) ;
+            int dO = Int32.Parse(fechaO[0]);
             int mO = Int32.Parse(fechaO[1]);
-            int dO = Int32.Parse(fechaO[2]);
+            int yO = Int32.Parse(fechaO[2]);
             int hO = Int32.Parse(horaO[0]);
-            int mO = Int32.Parse(horaO[1]);
+            int minO = Int32.Parse(horaO[1]);
 
 
-
-
-
-            var fi = DateTime.Parse(vehiculo.fechaI + " " + vehiculo.horaI);
-            var fo = DateTime.Parse(vehiculo.fechaO + " " + vehiculo.horaO);
-
-
-
-
-
-            var Htotales = (fo - fi).ToString(@"dd\d\ hh\h\ mm\m\ ");
-            string[] valores = Htotales.Split(" ");
-
-            int min = Int32.Parse(valores[2].Substring(0, 2));
-
-            //calcular horas
-            int hours = Int32.Parse(valores[1].Substring(0, 2));
-
-            //calcular dias
-            int days = Int32.Parse(valores[0].Substring(0, 2));
-
-            if(days == 0)
+            if(yI == yO)
             {
+                if(mI == mO)
+                {
+                    if(dI == dO)
+                    {
+                        if (hO > Inoche)
+                            contadorHoras = hO - Inoche;
+                    }//si dia de ingreso es diferente al dia de salida
+                    else
+                    {
+                        contadorHoras += 4;
+                        if (hO > Inoche)
+                            contadorHoras = hO - Inoche;
+                        if(hO < Fnoche)
+                            contadorHoras =Fnoche - hO;
+
+                        if (dI - dO > 1 )
+                        {
+                            contadorHoras += 4 * (dI - (dO -1));
+                            //si los dias no son continuos sumas las 4 horas de cada dias exta
+                        }
+                    }
+                }//si meses son iguales
+                else
+                {
+                    if (hO > Inoche)
+                      contadorHoras += hO - Inoche;
+                    //fecbrero
+                        if(mI == 2)
+                        {
+                            if (DateTime.IsLeapYear(yI))
+                            {
+                                bandera = (29 - dI) + (dO - 1);
+
+                                contadorHoras += bandera * (Inoche - 24 + Fnoche);
+
+                                bandera = 0;
+                            }
+                            else
+                            {
+                                bandera = (28 - dI) + (dO - 1);
+
+                                contadorHoras += bandera * (Inoche - 24 + Fnoche);
+
+                                bandera = 0;
+                            }
+
+                        }
+                      //meses de 30 dias
+                    if(mI == 4 || mI == 6 || mI == 9  || mI == 11)
+                    {
+                        bandera = (30 - dI) + (dO - 1);
+
+                        contadorHoras += bandera * (Inoche - 24 + Fnoche);
+
+                        bandera = 0;
+                    }
+                    //meses de 31 dias
+                    if(mI == 1 || mI == 3 || mI == 5 || mI == 7 || mI == 8 || mI ==10 || mI == 12)
+                    {
+                        bandera = (31 - dI) + (dO - 1);
+
+                        contadorHoras += bandera * (Inoche - 24 + Fnoche);
+
+                        bandera = 0;
+                    }
+
+                }
+
+            }//si años son iguales
+            else
+            {
+                contadorHoras = 0;
+                // calculo todo para los dias restantes hasta culminar el mes de inicio
+                if (mI == 2)
+                {
+                    if (DateTime.IsLeapYear(yI))
+                    {
+                        
+
+                        contadorHoras += (29 - dI) * (Inoche - 24 + Fnoche);
+
+                    }
+                    else
+                    {
+
+                        contadorHoras += (28 - dI) * (Inoche - 24 + Fnoche);
+
+                    }
+
+                }
+                //meses de 30 dias
+                if (mI == 4 || mI == 6 || mI == 9 || mI == 11)
+                {
+                   
+
+                    contadorHoras += (30 - dI) * (Inoche - 24 + Fnoche);
+
+                  
+                }
+                //meses de 31 dias
+                if (mI == 1 || mI == 3 || mI == 5 || mI == 7 || mI == 8 || mI == 10 || mI == 12)
+                {
+                   
+
+                    contadorHoras += (31 - dI) * (Inoche - 24 + Fnoche);
+
+                  
+                }
+
+                //verifico cuantos dias o horas quedan del año inicial
+
+                if( 12 >= (mI+1))
+                {
+                   for (int t = (mI+1); t<12; t++)
+                    {
+                        if (t == 2)
+                        {
+                            if (DateTime.IsLeapYear(yI))
+                            {
+
+
+                                contadorHoras += 29 * (Inoche - 24 + Fnoche);
+
+                            }
+                            else
+                            {
+
+                                contadorHoras += 28 * (Inoche - 24 + Fnoche);
+
+                            }
+
+                        }
+                        //meses de 30 dias
+                        if (t == 4 || t == 6 || t == 9 || t == 11)
+                        {
+
+
+                            contadorHoras += 30  * (Inoche - 24 + Fnoche);
+
+
+                        }
+                        //meses de 31 dias
+                        if (t == 1 || t == 3 || t == 5 || t == 7 || t == 8 || t == 10 || t == 12)
+                        {
+
+
+                            contadorHoras += 31 * (Inoche - 24 + Fnoche);
+
+
+                        }
+                    }
+                }
+
+                //verificamos si hay mas de un año de diferencia
+
+                //aqui esa solo un año
+                if(yI != (yO - 1))
+                {
+                    for( int i = yI; i<yO; i++)
+                    {
+                        for (int t = 1; t < 12; t++)
+                        {
+                            if (t == 2)
+                            {
+                                if (DateTime.IsLeapYear(yI))
+                                {
+
+
+                                    contadorHoras += 29 * (Inoche - 24 + Fnoche);
+
+                                }
+                                else
+                                {
+
+                                    contadorHoras += 28 * (Inoche - 24 + Fnoche);
+
+                                }
+
+                            }
+                            //meses de 30 dias
+                            if (t == 4 || t == 6 || t == 9 || t == 11)
+                            {
+
+
+                                contadorHoras += 30 * (Inoche - 24 + Fnoche);
+
+
+                            }
+                            //meses de 31 dias
+                            if (t == 1 || t == 3 || t == 5 || t == 7 || t == 8 || t == 10 || t == 12)
+                            {
+
+
+                                contadorHoras += 31 * (Inoche - 24 + Fnoche);
+
+
+                            }
+
+                        }
+                    }
+
+                }
+                
+                //y aqui simamos las horas contenidas en el ultimo año
+
+                //primeros los meses que sean menores al ultimo mes o al actual
+
+                    for (int t = 1; t < mO; t++)
+                    {
+                        if (t == 2)
+                        {
+                            if (DateTime.IsLeapYear(yO))
+                            {
+
+
+                                contadorHoras += 29 * (Inoche - 24 + Fnoche);
+
+                            }
+                            else
+                            {
+
+                                contadorHoras += 28 * (Inoche - 24 + Fnoche);
+
+                            }
+
+                        }
+                        //meses de 30 dias
+                        if (t == 4 || t == 6 || t == 9 || t == 11)
+                        {
+
+
+                            contadorHoras += 30 * (Inoche - 24 + Fnoche);
+
+
+                        }
+                        //meses de 31 dias
+                        if (t == 1 || t == 3 || t == 5 || t == 7 || t == 8 || t == 10 || t == 12)
+                        {
+
+
+                            contadorHoras += 31 * (Inoche - 24 + Fnoche);
+
+
+                        }
+                    }
+
+                //por ultimo sumamos el mes propio y los ultimos dias y/horas
+
+                contadorHoras += (dO-1) * (Inoche - 24 + Fnoche);
+
+                if (hO > Inoche)
+                    contadorHoras += Inoche - hO;
+                if (hO < Fnoche)
+                    contadorHoras += hO - Fnoche;
 
             }
 
-            return 0;
+
+
+            return contadorHoras;
         }
 
     }
