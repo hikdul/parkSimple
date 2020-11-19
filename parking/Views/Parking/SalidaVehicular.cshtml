@@ -1,0 +1,53 @@
+﻿@using parking.DataTransferObjects;
+@model InfSalidaVehiculo
+
+@{
+    ViewData["Title"] = "SalidaVehicular";
+
+    
+}
+
+<h1>SalidaVehicular</h1>
+@if (Model != null)
+{
+<div>
+    <h4>InfSalidaVehiculo</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.tiempoTotal)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.tiempoTotal)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.horasNocturnas)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.horasNocturnas)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.horasDiurnas)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.horasDiurnas)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MontoAPagar)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MontoAPagar)
+        </dd>
+    </dl>
+</div>
+}
+
+<section class="formularioHidden">
+    <h2 class="display-4"> Lea QR!!</h2>
+    <form asp-controller="parking" asp-action="SalidaVehicular">
+        <input type="text" name="texto" id="texto" />
+        <button id="btn"> Enviar</button>
+    </form>
+</section>
+
+

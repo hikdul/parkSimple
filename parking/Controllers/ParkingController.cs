@@ -54,16 +54,16 @@ namespace parking.Controllers
             return View();
         }
 
-        /// <summary>
-        /// aqui se generaran los datos y se dedvolvera un QR a la vista para que luego se imprima al cliente
-        /// tambien cubrira el proceso de generar los datos en base de datos
-        /// todos los procesos por lo general se aran mediente llamadas HTtP
-        /// </summary>
-        /// 
-
-        public void QRaVista()
+        public IActionResult SalidaVehicular(string texto)
         {
-            ViewBag.QRCode = DevolverQR();
+            InfSalidaVehiculo inf = new InfSalidaVehiculo();
+            if (String.IsNullOrEmpty(texto))
+                inf = null;
+            else
+                inf = DevolverSalida(texto);
+
+           
+            return View(inf);
         }
 
         // =========================== ### ===========================
@@ -147,6 +147,8 @@ namespace parking.Controllers
             //formato del texto
             //nuevo.id.ToString() + "=>" + nuevo.horaI +"=>"+nuevo.horaI
 
+            if (String.IsNullOrEmpty(textoQr))
+                return null;
 
             string[] datos = textoQr.Split("=>");
 

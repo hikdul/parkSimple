@@ -171,3 +171,4 @@ D:\Proyectos con Luis\proyecto3Simple\parking\parking\bin\Debug\netcoreapp3.1\Mi
 D:\Proyectos con Luis\proyecto3Simple\parking\parking\bin\Debug\netcoreapp3.1\BouncyCastle.Crypto.dll
 D:\Proyectos con Luis\proyecto3Simple\parking\parking\obj\Debug\netcoreapp3.1\parking.csproj.CoreCompileInputs.cache
 D:\Proyectos con Luis\proyecto3Simple\parking\parking\obj\Debug\netcoreapp3.1\parking.MvcApplicationPartsAssemblyInfo.cache
+D:\Proyectos con Luis\proyecto3Simple\parking\parking\obj\Debug\netcoreapp3.1\Razor\Views\Parking\SalidaVehicular.cshtml.g.cs
