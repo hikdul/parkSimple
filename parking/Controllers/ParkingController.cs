@@ -74,7 +74,10 @@ namespace parking.Controllers
         // Reportes Diaros
         // =========================== ### ===========================
 
-        //public ReporteDiario ReporteDiario()
+        /// <summary>
+        /// vista de mis reportes diarios
+        /// </summary>
+        /// <returns></returns>
         public IActionResult ReporteDiario()
         {
             
@@ -85,7 +88,11 @@ namespace parking.Controllers
 
 
         }
-
+        /// <summary>
+        /// retorna el DTO de los reportes generados
+        /// </summary>
+        /// <param name="lista"></param>
+        /// <returns></returns>
         private ReporteDiario ContadorReportes(List<vehiculo> lista)
         {
             return new ReporteDiario()
@@ -101,6 +108,12 @@ namespace parking.Controllers
 
 
         }
+
+        /// <summary>
+        /// calcula los montos en el dia actual y retorna toda la sumatoria
+        /// </summary>
+        /// <param name="lista"></param>
+        /// <returns></returns>
 
         private double calcularMontosPorDia(List<vehiculo> lista)
         {
@@ -122,10 +135,120 @@ namespace parking.Controllers
         }
 
         // =========================== ### ===========================
-        // componentes de comunicacion
+        // impresiones en PDF
         // =========================== ### ===========================
 
 
+        /// <summary>
+        /// para imprimir los datos del vehiculo que va de salida
+        /// aparte de mostrarlo en pantella hay que generar este recibo
+        /// </summary>
+        /// <returns></returns>
+
+        public FileResult salidaVehicularPDF(InfSalidaVehiculo inf)
+        {
+            //InfSalidaVehiculo inf = DevolverSalida(id.ToString() + "=>xx/xx/xxx=>HH:mm");
+            //InfSalidaVehiculo inf = DevolverSalida(textoQR);
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                PdfWriter writer = new PdfWriter(ms);
+                using (var pdfDoc = new PdfDocument(writer))
+                {
+                    Document doc = new Document(pdfDoc,PageSize.A4);
+                    doc.SetMargins(10, 10, 0, 10);
+                    //agrego datos
+                    Paragraph c1 = new Paragraph("Salida Vehicular");
+                    Paragraph c2 = new Paragraph("Tiempo Total: " + inf.tiempoTotal);
+                    Paragraph c3 = new Paragraph("horas Diurnas: " + inf.horasDiurnas);
+                    Paragraph c4 = new Paragraph("Horas Nocturnas: " + inf.horasNocturnas);
+                    Paragraph c5 = new Paragraph("Monto A Pagar: " + inf.MontoAPagar);
+
+                    //agrego estilos
+                    c1.SetFontSize(15);
+                    c1.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                    c2.SetFontSize(10);
+                    c2.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                    c3.SetFontSize(10);
+                    c3.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                    c4.SetFontSize(10);
+                    c4.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                    c5.SetFontSize(20);
+                    c5.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                  
+                    //agrego al documento
+                    doc.Add(c1);
+                    doc.Add(c2);
+                    doc.Add(c3);
+                    doc.Add(c4);
+                    doc.Add(c5);
+                    //cierro para enviar
+                    doc.Close();
+                    writer.Close();
+                }
+                return File(ms.ToArray(), "application/pdf");
+            }
+
+        }
+        /// <summary>
+        /// para devolver el reporte diario en PDF
+        /// </summary>
+        /// <returns></returns>
+        public FileResult ReporteDiarioPDF()
+        {
+            List<vehiculo> lista = HttpSolicitudes.GetList<vehiculo>(_url + "/todo");
+
+
+            ReporteDiario reporte =   ContadorReportes(lista);
+
+
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                PdfWriter writer = new PdfWriter(ms);
+                using (var pdfDoc = new PdfDocument(writer))
+                {
+                    Document doc = new Document(pdfDoc,  PageSize.A4);
+                    doc.SetMargins(10, 10, 0, 10);
+                    //agrego datos
+                    Paragraph c1 = new Paragraph("Reporte Diario");
+                    Paragraph c2 = new Paragraph("Historico Vehiculos: " + reporte.totalVehiculos);
+                    Paragraph c3 = new Paragraph("Vehiculos ingresados el dia de hoy: " + reporte.VehiculosIngresadosHoy);
+                    Paragraph c4 = new Paragraph("Vehiculos que han salido el dia de hoy: " + reporte.VehiculosQueHanSalido);
+                    Paragraph c5 = new Paragraph("Vehiculos que aun se encuentran estacionados: " + reporte.VehiculosQueNoHanSalido);
+                    Paragraph c6 = new Paragraph("Dinero recaudado El dia de hoy: " + reporte.cantidadDineroHoy + "S/.");
+                  
+                    //agrego estilos
+                    c1.SetFontSize(15);
+                    c1.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                    c2.SetFontSize(10);
+                    c2.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                    c3.SetFontSize(10);
+                    c3.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                    c4.SetFontSize(10);
+                    c4.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                    c5.SetFontSize(10);
+                    c5.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                    c6.SetFontSize(10);
+                    c6.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                    //agrego al documento
+                    doc.Add(c1);
+                    doc.Add(c2);
+                    doc.Add(c3);
+                    doc.Add(c4);
+                    doc.Add(c5);
+                    doc.Add(c6);
+                    //cierro para enviar
+                    doc.Close();
+                    writer.Close();
+                }
+                return File(ms.ToArray(), "application/pdf");
+            }
+
+
+
+
+        }
 
         /// <summary>
         /// con los datos actuales retorno un QR
@@ -149,13 +272,17 @@ namespace parking.Controllers
             return QRenPDF(nuevo);
 
         }
-        
+
+
+        // =========================== ### ===========================
+        // componentes de comunicacion
+        // =========================== ### ===========================
         /// <summary>
         /// para generar un pdf con el qr de la informacion necesaria del nuevo ingreso vehicular
         /// </summary>
         /// <param name="nuevo"></param>
         /// <returns></returns>
-         public FileResult QRenPDF(vehiculo nuevo)
+        public FileResult QRenPDF(vehiculo nuevo)
         {
 
             using (MemoryStream ms = new MemoryStream())
@@ -293,6 +420,7 @@ namespace parking.Controllers
 
             InfSalidaVehiculo endObj = new InfSalidaVehiculo()
             {
+                id = vehiculo.id,
                 tiempoTotal = Htotales,
                 horasDiurnas = horasDiurnas,
                 horasNocturnas = horasNocturnas,

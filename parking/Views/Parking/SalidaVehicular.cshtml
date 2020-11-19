@@ -19,6 +19,10 @@
         <div class="col-12">
             <div class="formulario" id="formulario">
 
+
+
+              
+
                 <div class="form-group formulario__grupo">
                     <label class="control-label formulario__label text-center">   @Html.DisplayNameFor(model => model.tiempoTotal)</label>
                     <div class="formulario__grupo-input">
@@ -43,7 +47,17 @@
                         <h6 class="text-center"> @Html.DisplayFor(model => model.horasDiurnas) </h6>
                     </div>
                 </div>
+                <div class="form-group ormulario__grupo formulario__grupo-btn-enviar">
 
+                    <form>
+                        <input value=" @Html.DisplayFor(model => model.tiempoTotal)" id="tiempoTotal" name="tiempoTotal" hidden />
+                        <input value=" @Html.DisplayFor(model => model.MontoAPagar)" id="MontoAPagar" name="MontoAPagar" hidden />
+                        <input value=" @Html.DisplayFor(model => model.horasNocturnas)" id="horasNocturnas" name="horasNocturnas" hidden />
+                        <input value=" @Html.DisplayFor(model => model.horasDiurnas)" id="horasDiurnas" name="horasDiurnas" hidden />
+                    </form>
+                    <a asp-controller="Parking" asp-action="salidaVehicularPDF" target="_blank" class="formulario__btn btn btn-info"> PDF </a>
+
+                </div>
 
             </div>
         </div>
@@ -74,7 +88,7 @@
     const texto = document.getElementById("texto");
     const btnEnviar = document.getElementById("btnEnv");
 
-    window.onload() = function () => {
+    window.onload() = function() {
         texto.value = "1=>xx/xx/xxx=>HH:mm"
         btnEnviar.click();
     }
