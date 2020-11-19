@@ -26,7 +26,9 @@ namespace parking.Controllers
 
         public IActionResult Editar(Costo costo)
         {
-            var resp = HttpSolicitudes.PostHTTP<Costo>(_url, costo);
+           
+            //var resp = HttpSolicitudes.PostHTTP<Costo>(_url, costo);
+            var resp = HttpSolicitudes.PuttHTTP<Costo>(_url,1, costo);
             if (resp)
                 return RedirectToAction("Index");
             return View("Index",costo);

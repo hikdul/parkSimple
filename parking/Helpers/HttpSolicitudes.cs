@@ -130,12 +130,12 @@ namespace Parking.helper
         }
 
 
-        public static bool PuttHTTP<T>(string URL, T insert) where T : class, new()
+        public static bool PuttHTTP<T>(string URL,int id, T insert) where T : class, new()
         {
             try
             {
                 string resultado = "";
-                WebRequest peticion = WebRequest.Create(URL);
+                WebRequest peticion = WebRequest.Create(URL+"/"+id);
                 //en la anterior no se asignoi el metodo pues por defecto es get
                 peticion.Method = "put";
                 //el infaltable content type

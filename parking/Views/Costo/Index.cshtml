@@ -4,48 +4,64 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<h4>Costo</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Editar">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input asp-for="nombre" hidden value="Original" class="form-control" />
+    <div class="col-12">
+        <div class="conFormulario">
 
-            <div class="form-group">
-                <label asp-for="hora" class="control-label"></label>
-                <input asp-for="hora" class="form-control" />
-                <span asp-validation-for="hora" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="f30" class="control-label"></label>
-                <input asp-for="f30" class="form-control" />
-                <span asp-validation-for="f30" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="f15" class="control-label"></label>
-                <input asp-for="f15" class="form-control" />
-                <span asp-validation-for="f15" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="f5" class="control-label"></label>
-                <input asp-for="f5" class="form-control" />
-                <span asp-validation-for="f5" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="nocturno" class="control-label"></label>
-                <input asp-for="nocturno" class="form-control" />
-                <span asp-validation-for="nocturno" class="text-danger"></span>
-            </div>
 
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+
+            <form asp-action="Editar" class="formulario" id="formulario">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input asp-for="nombre" hidden value="Original" class="form-control" />
+
+                <div class="form-group formulario__grupo">
+                    <label asp-for="hora" class="control-label formulario__label"></label>
+                    <div class="formulario__grupo-input">
+                        <input asp-for="hora" class="form-control" />
+                    </div>
+                    <span asp-validation-for="hora" class="text-danger formulario__input-error"></span>
+                </div>
+                <div class="form-group formulario__grupo">
+                    <label asp-for="f30" class="control-label formulario__label"></label>
+                    <div class="formulario__grupo-input">
+                        <input asp-for="f30" class="form-control" />
+                    </div>
+                    <span asp-validation-for="f30" class="text-danger formulario__input-error"></span>
+                </div>
+                <div class="form-group formulario__grupo">
+                    <label asp-for="f15" class="control-label formulario__label"></label>
+                    <div class="formulario__grupo-input">
+                        <input asp-for="f15" class="form-control" />
+                    </div>
+                    <span asp-validation-for="f15" class="text-danger formulario__input-error"></span>
+                </div>
+                <div class="form-group formulario__grupo">
+                    <label asp-for="f5" class="control-label formulario__label"></label>
+                    <div class="formulario__grupo-input">
+                        <input asp-for="f5" class="form-control" />
+                    </div>
+                    <span asp-validation-for="f5" class="text-danger formulario__input-error"></span>
+                </div>
+                <div class="form-group formulario__grupo">
+                    <label asp-for="nocturno" class="control-label formulario__label"></label>
+                    <div class="formulario__grupo-input">
+                        <input asp-for="nocturno" class="form-control" />
+                    </div>
+                    <span asp-validation-for="nocturno" class="text-danger formulario__input-error"></span>
+                </div>
+
+                <div class="form-group ormulario__grupo formulario__grupo-btn-enviar">
+                    <input type="submit" value="Guardar!" class="formulario__btn btn btn-info" />
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+<hr />
+<hr />
+
 
 
 @section Scripts {

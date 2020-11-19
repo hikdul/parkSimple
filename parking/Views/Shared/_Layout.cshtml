@@ -9,7 +9,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-info border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">parking</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -25,16 +25,16 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>*@
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Costo" asp-action="Index">Editar Costos</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Costo" asp-action="Index">Editar Costos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="parking" asp-action="BtnGenerarQr">Nuevos Ingresos</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="parking" asp-action="BtnGenerarQr">Nuevos Ingresos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="parking" asp-action="SalidaVehicular">Salida Vehicular</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="parking" asp-action="SalidaVehicular">Salida Vehicular</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="parking" asp-action="ReporteDiario">Reporte Diario</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="parking" asp-action="ReporteDiario">Reporte Diario</a>
                         </li>
 
                         @*SalidaVehicular*@
@@ -51,7 +51,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2020 - parking - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <p class="text-center font-weight-normal">&copy; 2020 - parking </p>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
