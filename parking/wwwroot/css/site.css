@@ -101,13 +101,30 @@ body {
    
 }
 
+.form {
+    margin-top: 10px;
+    padding-top: 15px;
+    display: grid;
+    justify-content: space-between;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+    border: 5px solid rgba(163,163,163, 0.6);
+    border-radius: 5%;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.border--gris {
+    border: 5px solid rgba(163,163,163, 0.6);
+    border-radius: 7px;
+}
 
 .formulario {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 20px;
-    border: 5px solid rgba(163,163,163, 0.6);
-    border-radius: 5%;
+   
     padding: 10px;
 }
 
@@ -262,7 +279,30 @@ body {
 }
 
 
+/*boton de generar nuevo ticket*/
 
+.contBtnQR{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .contBtnQR .btnqr {
+        margin: auto;
+        padding: 100px;
+        border: 10px solid rgba(163,163,163, 0.6);
+        border-radius: 50%;
+        width: 450px;
+        height: 450px;
+        /*        width: 100%;
+        height: 100%;*/
+        max-width: 500px;
+        max-height: 500px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
 
 
 
