@@ -1,0 +1,62 @@
+﻿@model parking.DataTransferObjects.ReporteDiario
+
+@{
+    ViewData["Title"] = "ReporteDiario";
+}
+
+<h1>ReporteDiario</h1>
+
+<div>
+    <h4>ReporteDiario</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.VehiculosIngresadosHoy)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.VehiculosIngresadosHoy)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.totalVehiculos)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.totalVehiculos)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.VehiculosQueHanSalido)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.VehiculosQueHanSalido)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.VehiculosQueNoHanSalido)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.VehiculosQueNoHanSalido)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.cantidadDineroHoy)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.cantidadDineroHoy)
+        </dd>
+
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.costosUsados.nocturno)
+        </dd>
+
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.costosUsados.hora)
+        </dd>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.costosUsados.f30)
+        </dd>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.costosUsados.f15)
+        </dd>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.costosUsados.f5)
+        </dd>
+    </dl>
+</div>
+

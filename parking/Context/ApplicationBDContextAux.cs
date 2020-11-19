@@ -109,6 +109,11 @@ namespace Parking.Context
 
         #region Vehiculo o parking
 
+        internal async Task<List<vehiculo>> GetTodo()
+        {
+            return await CustomProcedures.GetAll<vehiculo>("getParkTodo", conn);
+        }
+
         internal async Task<bool> PostVehiculo(vehiculo insert)
         {
             if (insert == null)

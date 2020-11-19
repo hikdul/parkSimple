@@ -71,6 +71,57 @@ namespace parking.Controllers
         }
 
         // =========================== ### ===========================
+        // Reportes Diaros
+        // =========================== ### ===========================
+
+        //public ReporteDiario ReporteDiario()
+        public IActionResult ReporteDiario()
+        {
+            
+            List<vehiculo> lista = HttpSolicitudes.GetList<vehiculo>(_url+"/todo");
+            
+
+            return  View(ContadorReportes(lista));
+
+
+        }
+
+        private ReporteDiario ContadorReportes(List<vehiculo> lista)
+        {
+            return new ReporteDiario()
+            {
+                totalVehiculos = lista.Count(),
+                VehiculosQueNoHanSalido = lista.FindAll(pre => pre.fechaO == null).Count(),
+                VehiculosIngresadosHoy = lista.FindAll(pre => pre.fechaI == DateTime.Now.ToString("dd/MM/yyyy")).Count(),
+                VehiculosQueHanSalido = lista.FindAll(pre => pre.fechaO == DateTime.Now.ToString("dd/MM/yyyy")).Count(),
+                costosUsados = HttpSolicitudes.getById<Costo>(_urlCosto, 1),
+                cantidadDineroHoy = calcularMontosPorDia(lista)
+            };
+
+
+
+        }
+
+        private double calcularMontosPorDia(List<vehiculo> lista)
+        {
+            double total = 0;
+            InfSalidaVehiculo band = new InfSalidaVehiculo();
+            foreach (var item in lista)
+            {
+
+                if(item.fechaO == DateTime.Now.ToString("dd/MM/yyyy"))
+                {
+                    band = CalcularCosto(item);
+                    total += band.MontoAPagar;
+                    band = null;
+                }
+
+            }
+
+            return total;
+        }
+
+        // =========================== ### ===========================
         // componentes de comunicacion
         // =========================== ### ===========================
 

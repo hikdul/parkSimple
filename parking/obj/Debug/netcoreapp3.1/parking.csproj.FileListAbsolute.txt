@@ -172,3 +172,4 @@ D:\Proyectos con Luis\proyecto3Simple\parking\parking\bin\Debug\netcoreapp3.1\Bo
 D:\Proyectos con Luis\proyecto3Simple\parking\parking\obj\Debug\netcoreapp3.1\parking.csproj.CoreCompileInputs.cache
 D:\Proyectos con Luis\proyecto3Simple\parking\parking\obj\Debug\netcoreapp3.1\parking.MvcApplicationPartsAssemblyInfo.cache
 D:\Proyectos con Luis\proyecto3Simple\parking\parking\obj\Debug\netcoreapp3.1\Razor\Views\Parking\SalidaVehicular.cshtml.g.cs
+D:\Proyectos con Luis\proyecto3Simple\parking\parking\obj\Debug\netcoreapp3.1\Razor\Views\Parking\ReporteDiario.cshtml.g.cs

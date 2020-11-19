@@ -20,6 +20,13 @@ namespace parking.Controllers
         ApplicationBDContextAux BD;
 
 
+        [HttpGet("todo")]
+        public async Task<List<vehiculo>> GetTodo()
+        {
+            BD = new ApplicationBDContextAux();
+            return await BD.GetTodo();
+        }
+
         /// <summary>
         /// genera una lista de los vehiculo que esten estacionados
         /// </summary>
