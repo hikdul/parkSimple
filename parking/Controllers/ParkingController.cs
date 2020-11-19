@@ -53,7 +53,11 @@ namespace parking.Controllers
         {
             return View();
         }
-
+        /// <summary>
+        /// vista donde se retornan los datos del pago final del vehiculo
+        /// </summary>
+        /// <param name="texto"></param>
+        /// <returns></returns>
         public IActionResult SalidaVehicular(string texto)
         {
             InfSalidaVehiculo inf = new InfSalidaVehiculo();
@@ -69,6 +73,8 @@ namespace parking.Controllers
         // =========================== ### ===========================
         // componentes de comunicacion
         // =========================== ### ===========================
+
+
 
         /// <summary>
         /// con los datos actuales retorno un QR
@@ -295,10 +301,12 @@ namespace parking.Controllers
                             contadorHoras = hO - Inoche;
                         if(hO < Fnoche)
                             contadorHoras =Fnoche - hO;
+                        if (hO < Inoche && hO > Fnoche)
+                            contadorHoras += Fnoche;
 
                         if (dI - dO > 1 )
                         {
-                            contadorHoras += 4 * (dI - (dO -1));
+                            contadorHoras +=(24 - Inoche + Fnoche) * (dI - (dO -1));
                             //si los dias no son continuos sumas las 4 horas de cada dias exta
                         }
                     }
@@ -346,7 +354,13 @@ namespace parking.Controllers
 
                         bandera = 0;
                     }
-
+                    //si la salida esta generada en base a la hora de salida
+                    if (hO > Inoche)
+                        contadorHoras = hO - Inoche;
+                    if (hO < Fnoche)
+                        contadorHoras = Fnoche - hO;
+                    if (hO < Inoche && hO > Fnoche)
+                        contadorHoras += Fnoche;
                 }
 
             }//si años son iguales
