@@ -49,13 +49,7 @@
                 </div>
                 <div class="form-group ormulario__grupo formulario__grupo-btn-enviar">
 
-                    <form>
-                        <input value=" @Html.DisplayFor(model => model.tiempoTotal)" id="tiempoTotal" name="tiempoTotal" hidden />
-                        <input value=" @Html.DisplayFor(model => model.MontoAPagar)" id="MontoAPagar" name="MontoAPagar" hidden />
-                        <input value=" @Html.DisplayFor(model => model.horasNocturnas)" id="horasNocturnas" name="horasNocturnas" hidden />
-                        <input value=" @Html.DisplayFor(model => model.horasDiurnas)" id="horasDiurnas" name="horasDiurnas" hidden />
-                    </form>
-                    <a asp-controller="Parking" asp-action="salidaVehicularPDF" target="_blank" class="formulario__btn btn btn-info"> PDF </a>
+                    
 
                 </div>
 
@@ -71,10 +65,10 @@
     <div class="col-12">
         <section class="formularioHidden">
             @*<h2 class="display-4"> Lea QR!!</h2>*@
-            <form asp-controller="parking" asp-action="SalidaVehicular">
+            <form asp-controller="parking" asp-action="DevolverSalida">
                 <div class="formulario__grupo-input form" id="formulario">
                     <input type="text" class="text-center" name="texto" id="texto" />
-                    <button id="btnEnv" class="formulario__btn btn btn-info"> Enviar</button>
+                    <button id="btnEnv" class="formulario__btn btn btn-info" formtarget="_blank"> Enviar</button>
                 </div>
 
             </form>

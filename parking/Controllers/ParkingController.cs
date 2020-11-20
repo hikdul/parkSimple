@@ -58,16 +58,18 @@ namespace parking.Controllers
         /// </summary>
         /// <param name="texto"></param>
         /// <returns></returns>
-        public IActionResult SalidaVehicular(string texto)
+        //public IActionResult SalidaVehicular(string texto)
+        public IActionResult SalidaVehicular()
         {
-            InfSalidaVehiculo inf = new InfSalidaVehiculo();
-            if (String.IsNullOrEmpty(texto))
-                inf = null;
-            else
-                inf = DevolverSalida(texto);
+            //InfSalidaVehiculo inf = new InfSalidaVehiculo();
+            //if (String.IsNullOrEmpty(texto))
+            //    return View(null);
+            //else
+            //    return View(inf);
 
+            //inf = DevolverSalida(texto);
+            return View();
            
-            return View(inf);
         }
 
         // =========================== ### ===========================
@@ -155,7 +157,7 @@ namespace parking.Controllers
                 PdfWriter writer = new PdfWriter(ms);
                 using (var pdfDoc = new PdfDocument(writer))
                 {
-                    Document doc = new Document(pdfDoc,PageSize.A4);
+                    Document doc = new Document(pdfDoc,PageSize.A7);
                     doc.SetMargins(10, 10, 0, 10);
                     //agrego datos
                     Paragraph c1 = new Paragraph("Salida Vehicular");
@@ -208,7 +210,7 @@ namespace parking.Controllers
                 PdfWriter writer = new PdfWriter(ms);
                 using (var pdfDoc = new PdfDocument(writer))
                 {
-                    Document doc = new Document(pdfDoc,  PageSize.A4);
+                    Document doc = new Document(pdfDoc,  PageSize.A7);
                     doc.SetMargins(10, 10, 0, 10);
                     //agrego datos
                     Paragraph c1 = new Paragraph("Reporte Diario");
@@ -289,12 +291,14 @@ namespace parking.Controllers
             {
                 PdfWriter writer = new PdfWriter(ms);
                 using(var pdfDoc = new PdfDocument(writer)){
-                    Document doc = new Document(pdfDoc,new PageSize(150,200));
+                    Document doc = new Document(pdfDoc,PageSize.A7);
                     doc.SetMargins(10, 10, 0, 10);
                     //agrego datos
                     Paragraph c1 = new Paragraph("Ingreso Vehicular");
                     Paragraph c2 = new Paragraph("Hora Ingreso: " + nuevo.horaI);
                     Paragraph c3 = new Paragraph("Fecha Ingreso: " + nuevo.fechaI);
+                    Paragraph cE = new Paragraph(" _______________ ");
+                    Paragraph c4 = new Paragraph("Por Favor NO DOBLE ni ARRUGE este tickete");
                     BarcodeQRCode brQR = new BarcodeQRCode(nuevo.id.ToString() + "=>" + nuevo.horaI +"=>"+nuevo.horaI);
                     Image imgQR = new Image(brQR.CreateFormXObject(pdfDoc));
                     //agrego estilos
@@ -304,13 +308,21 @@ namespace parking.Controllers
                     c2.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
                     c3.SetFontSize(5);
                     c3.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
-                    imgQR.ScaleToFit(120, 120);
+                    cE.SetFontSize(5);
+                    cE.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                    c4.SetFontSize(5);
+                    c4.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                    //imgQR.ScaleToFit()
+                    imgQR.ScaleToFit(180, 180);
                     imgQR.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
                     //agrego al documento
                     doc.Add(c1);
                     doc.Add(c2);
                     doc.Add(c3);
                     doc.Add(imgQR);
+                    doc.Add(cE);
+                    //doc.Add(cE);
+                    doc.Add(c4);
                     //cierro para enviar
                     doc.Close();
                     writer.Close();
@@ -326,15 +338,16 @@ namespace parking.Controllers
         /// </summary>
         /// <param name="textoQr"></param>
 
-        public InfSalidaVehiculo DevolverSalida(string textoQr)
+        //public InfSalidaVehiculo DevolverSalida(string textoQr)
+        public FileResult DevolverSalida(string texto)
         {
             //formato del texto
             //nuevo.id.ToString() + "=>" + nuevo.horaI +"=>"+nuevo.horaI
 
-            if (String.IsNullOrEmpty(textoQr))
+            if (String.IsNullOrEmpty(texto))
                 return null;
 
-            string[] datos = textoQr.Split("=>");
+            string[] datos = texto.Split("=>");
 
             vehiculo salida = new vehiculo();
             salida.id = Int32.Parse(datos[0].Trim());
@@ -345,9 +358,9 @@ namespace parking.Controllers
 
             salida = HttpSolicitudes.PutAndGetHTTP<vehiculo>(_url+ "/salida", Int32.Parse(datos[0].Trim()), salida);
             //salida.tiempo = CalcularCosto(salida);
-           
+
             
-            return CalcularCosto(salida);
+            return salidaVehicularPDF(CalcularCosto(salida));
 
         }
 
