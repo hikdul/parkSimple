@@ -458,8 +458,8 @@ namespace parking.Controllers
 
             int bandera = 0;
 
-            string[] fechaI = vehiculo.fechaI.Split("/");
-            string[] fechaO = vehiculo.fechaO.Split("/");
+            string[] fechaI = vehiculo.fechaI.Split("/") != null ? vehiculo.fechaI.Split("/") : vehiculo.fechaI.Split("-");
+            string[] fechaO = vehiculo.fechaO.Split("/") != null ? vehiculo.fechaO.Split("/") : vehiculo.fechaO.Split("-");
             string[] horaI = vehiculo.horaI.Split(":");
             string[] horaO = vehiculo.horaO.Split(":");
 
