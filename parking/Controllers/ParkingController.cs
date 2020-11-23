@@ -69,14 +69,20 @@ namespace parking.Controllers
         // Reportes Diaros
         // =========================== ### ===========================
 
-
-       public List<vehiculo> ReporteEntreFechas(string fechaI, string fechaO)
+        /// <summary>
+        /// me genera un reporte dandole dos fechas como comun
+        /// </summary>
+        /// <param name="fechaI"></param>
+        /// <param name="fechaO"></param>
+        /// <returns></returns>
+        public ReporteDiario ReporteEntreFechas(string fechaI, string fechaO)
        {
             //{{url}}API/parkingAPI/
 
             try
             {
-                return HttpSolicitudes.GetList<vehiculo>(_url + "/todo/fechas?fechaI="+fechaI+"&fechaO="+fechaO);
+                var lista = HttpSolicitudes.GetList<vehiculo>(_url + "/todo/fechas?fechaI="+fechaI+"&fechaO="+fechaO);
+                return ContadorReportes(lista, false);
             }
             catch
             {
@@ -225,6 +231,87 @@ namespace parking.Controllers
         // impresiones en PDF
         // =========================== ### ===========================
 
+
+        public FileResult ReporteEntreFechasPDF(string fechaI,string fechaO)
+        {
+            ReporteDiario reporte = ReporteEntreFechas(fechaI, fechaO);
+
+            try
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    PdfWriter writer = new PdfWriter(ms);
+                    using (var pdfDoc = new PdfDocument(writer))
+                    {
+                        Document doc = new Document(pdfDoc, PageSize.A7);
+                        doc.SetMargins(10, 10, 0, 10);
+                        //agrego datos
+                        Paragraph c1 = new Paragraph("Reporte del " + fechaI + " Hasta " + fechaO);
+                        Paragraph c2 = new Paragraph("Historico Vehiculos: " + reporte.totalVehiculos);
+                        Paragraph c3 = new Paragraph("Vehiculos ingresados: " + reporte.VehiculosIngresadosHoy);
+                        Paragraph c4 = new Paragraph("Vehiculos que han salido: " + reporte.VehiculosQueHanSalido);
+                        Paragraph c5 = new Paragraph("Vehiculos que aun se encuentran estacionados: " + reporte.VehiculosQueNoHanSalido);
+                        Paragraph c6 = new Paragraph("Dinero recaudado: " + reporte.cantidadDineroHoy + "S/.");
+
+                        //agrego estilos
+                        c1.SetFontSize(15);
+                        c1.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                        c2.SetFontSize(10);
+                        c2.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                        c3.SetFontSize(10);
+                        c3.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                        c4.SetFontSize(10);
+                        c4.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                        c5.SetFontSize(10);
+                        c5.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                        c6.SetFontSize(10);
+                        c6.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                        //agrego al documento
+                        doc.Add(c1);
+                        doc.Add(c2);
+                        doc.Add(c3);
+                        doc.Add(c4);
+                        doc.Add(c5);
+                        doc.Add(c6);
+                        //cierro para enviar
+                        doc.Close();
+                        writer.Close();
+                    }
+                    return File(ms.ToArray(), "application/pdf");
+                }
+
+            }
+            catch
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    PdfWriter writer = new PdfWriter(ms);
+                    using (var pdfDoc = new PdfDocument(writer))
+                    {
+                        Document doc = new Document(pdfDoc, PageSize.A7);
+                        doc.SetMargins(10, 10, 0, 10);
+                        //agrego datos
+                        Paragraph c1 = new Paragraph("Datos Suministrados No Validos");
+                        
+
+                        //agrego estilos
+                        c1.SetFontSize(15);
+                        c1.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                       
+
+                        //agrego al documento
+                        doc.Add(c1);
+                      
+                        //cierro para enviar
+                        doc.Close();
+                        writer.Close();
+                    }
+                    return File(ms.ToArray(), "application/pdf");
+                }
+            }
+
+
+        }
 
         /// <summary>
         /// para imprimir los datos del vehiculo que va de salida

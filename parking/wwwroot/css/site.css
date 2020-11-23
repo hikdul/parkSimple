@@ -267,6 +267,7 @@ body {
         grid-template-columns: 1fr;
     }
 
+    .contFechas .fecha1,
     .formulario__grupo-terminos,
     .formulario__mensaje,
     .formulario__grupo-btn-enviar {
@@ -276,6 +277,13 @@ body {
     .formulario__btn {
         width: 100%;
     }
+    .contFechas {
+        display: grid;
+        grid-gap: 5px;
+        grid-template-areas: "fe";
+        grid-template-columns: 1fr;
+    }
+   
 }
 
 

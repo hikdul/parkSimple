@@ -12,46 +12,54 @@
         <div class="col-12">
                 <h2 class="control-label formulario__label text-center"> Reporte echo el @DateTime.Now.ToString("dd/MM/yyyy")  </h2>
                 <div class="formulario" id="formulario">
-                   <!--botones y busquedas -->
-                    <div class="form-group ormulario__grupo formulario__grupo-btn-enviar">
+                    <!--botones y busquedas -->
+                        <div class="form-group ormulario__grupo formulario__grupo-btn-enviar">
 
-                        <div class="contFechas">
-                            <div class="fecha1">
-                                @*value="@DateTime.Now.ToString("yyyy-MM-dd")"*@
-                                <label class="labelFecha control-label formulario__label text-center">Desde </label>
-                                <input type="date" id="fechaI" min="2020-11-20" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
-                            </div>
-                            <div class="fecha2">
-                                <label class="labelFecha control-label formulario__label text-center">Hasta </label>
-                                <input type="date" id="fechaO" min="2020-11-20" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
-                            </div>
-                            <div class="fecha3 btnFechas">
-                                
+                            <div class="contFechas">
+                                <div class="fecha1">
 
-                                <a  asp-controller="Parking" asp-action="ReporteDiario" class="btn btn-info text-light">Calcular</a>
-                                 <a asp-controller="Parking" asp-action="ReporteDiarioPDF" target="_blank" class="formulario__btnU btn btn-info"> PDF </a>
+                                    <label class="labelFecha control-label formulario__label text-center">Desde </label>
+                                    <input type="date" id="fechaI" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="2020-11-20" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                </div>
+                                <div class="fecha2">
+                                    <label class="labelFecha control-label formulario__label text-center">Hasta </label>
+                                    <input type="date" id="fechaO" value="@DateTime.Now.ToString("yyyy-MM-dd")" min="2020-11-20" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                </div>
+                                <div class="fecha3 btnFechas">
+
+
+                                    <buttom id="btnReporteEntreFechas" class="btn btn-info text-light">Calcular</buttom>
+                                    @*<a asp-controller="Parking" asp-action="ReporteEntreFechasPDF" target="_blank" class="formulario__btnU btn btn-info"> PDF </a>*@
+                                    <buttom  id="btnReporteEntreFechasPDF" class="formulario__btnU btn btn-info"> PDF </buttom>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     <!-- valores a buscar-->
                     <div class="form-group formulario__grupo">
                         <label class="control-label formulario__label text-center">   @Html.DisplayNameFor(model => model.VehiculosIngresadosHoy)</label>
                         <div class="formulario__grupo-input">
-                            <h3 class="text-center">  @Html.DisplayFor(model => model.VehiculosIngresadosHoy) </h3>
+                            <h3 id="VehiculosIngresadosHoy" class="text-center">  @Html.DisplayFor(model => model.VehiculosIngresadosHoy) </h3>
                         </div>
                     </div>
 
                     <div class="form-group formulario__grupo">
                         <label class="control-label formulario__label text-center">    @Html.DisplayNameFor(model => model.totalVehiculos)  </label>
                         <div class="formulario__grupo-input">
-                            <h3 class="text-center">    @Html.DisplayFor(model => model.totalVehiculos)  </h3>
+                            <h3 id="totalVehiculos" class="text-center">    @Html.DisplayFor(model => model.totalVehiculos)  </h3>
                         </div>
                     </div>
 
                     <div class="form-group formulario__grupo">
                         <label class="control-label formulario__label text-center">     @Html.DisplayNameFor(model => model.VehiculosQueHanSalido)  </label>
                         <div class="formulario__grupo-input">
-                            <h3 class="text-center">                  @Html.DisplayFor(model => model.VehiculosQueHanSalido)  </h3>
+                            <h3 id="VehiculosQueHanSalido" class="text-center">                  @Html.DisplayFor(model => model.VehiculosQueHanSalido)  </h3>
+                        </div>
+                    </div>
+
+                    <div class="form-group formulario__grupo">
+                        <label class="control-label formulario__label text-center">     @Html.DisplayNameFor(model => model.VehiculosQueNoHanSalido)  </label>
+                        <div class="formulario__grupo-input">
+                            <h3 id="VehiculosQueNoHanSalido" class="text-center">                  @Html.DisplayFor(model => model.VehiculosQueNoHanSalido)  </h3>
                         </div>
                     </div>
 
@@ -60,7 +68,7 @@
                             @Html.DisplayNameFor(model => model.cantidadDineroHoy)
                         </label>
                         <div class="formulario__grupo-input">
-                            <h2 class="text-center">    @Html.DisplayFor(model => model.cantidadDineroHoy)  S/. </h2>
+                            <h2 id="cantidadDineroHoy" class="text-center">    @Html.DisplayFor(model => model.cantidadDineroHoy)  S/. </h2>
                         </div>
                     </div>
 
@@ -118,17 +126,80 @@
 
 <script>
 
-    @*let fi = document.getElementById('fechaInicial')
-    let ff = document.getElementById('fechafinal')
 
-    window.onload() = ()=> {
-        fechasActuales()
+    const btnReporteEntreFechas = document.getElementById("btnReporteEntreFechas");
+    const btnReporteEntreFechasPDF = document.getElementById('btnReporteEntreFechasPDF');
+
+    // ============ ### ============
+    // Organizo las fechas para que me las entienda C#
+    // ============ ### ============
+
+    const cambiarFormatoFecha = fecha => {
+
+        if (fecha == '')
+            return '';
+
+        let band = fecha.split('-'); // != null ? fecha.split('/') : fecha.split('-');
+        let flag = band[0];
+        band[0] = band[2];
+        band[2] = flag;
+
+        return band.join('/');
+
     }
 
-    const fechasActuales = () => {
-        fi.value = Date.now()
-        ff.value = Date.now()
-    }*@
+    // ============ ### ============
+    // introduzco el boton de click
+    // ============ ### ============
+    btnReporteEntreFechas.addEventListener('click', () => {
+        let fi = document.getElementById("fechaI").value;
+        let fo = document.getElementById("fechaO").value
+
+
+        fi = cambiarFormatoFecha(fi);
+        fo = cambiarFormatoFecha(fo);
+
+        console.log(fi + " " + fo);
+
+
+        $.get(`ReporteEntreFechas?fechaI=${fi}&fechaO=${fo}`, data => {
+            console.log(data);
+
+            if (data != null) {
+
+
+                document.getElementById('VehiculosIngresadosHoy').innerHTML = '<h3 id="VehiculosIngresadosHoy" class="text-center">' + data.vehiculosIngresadosHoy + '</h3>';
+                document.getElementById('totalVehiculos').innerHTML = '<h3 id="totalVehiculos" class="text-center">' + data.totalVehiculos + '</h3>';
+                document.getElementById('VehiculosQueHanSalido').innerHTML = '<h3 id="VehiculosQueHanSalido" class="text-center">' + data.vehiculosQueHanSalido + '</h3>';
+                document.getElementById('VehiculosQueNoHanSalido').innerHTML = '<h3 id="VehiculosQueNoHanSalido" class="text-center">' + data.vehiculosQueNoHanSalido + '</h3>';
+                document.getElementById('cantidadDineroHoy').innerHTML = '  <h2 id="cantidadDineroHoy" class="text-center">' + data.cantidadDineroHoy + 'S/. </h2>';
+            }
+
+
+        });
+
+    });
+
+    btnReporteEntreFechasPDF.addEventListener('click',() => {
+        let fi = document.getElementById("fechaI").value;
+        let fo = document.getElementById("fechaO").value
+
+
+        fi = cambiarFormatoFecha(fi);
+        fo = cambiarFormatoFecha(fo);
+
+        console.log(fi + " " + fo);
+
+        window.open(`ReporteEntreFechasPDF?fechaI=${fi}&fechaO=${fo}`, '_blank');
+
+        @*$.get(`ReporteEntreFechasPDF?fechaI=${fi}&fechaO=${fo}`, data => {
+            window.open(data, '_blank');
+        });*@
+
+    })
+    
+
+
 
 
 </script>

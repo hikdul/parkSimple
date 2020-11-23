@@ -1,0 +1,44 @@
+﻿@model usr;
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+
+
+
+    <h1>Login</h1>
+
+    <div>
+        <input type="text" id="nombre" />
+        <input type="password" id="psw" />
+        <p id="errorLogin" class="LoginE" > Datos No Validos </p>
+        <button id="btn"> enviar</button>
+    </div>
+
+
+    <script>
+
+    @*const btn = document.getElementById("btn")
+    let nm = document.getElementById("nombre").value
+    let ps = document.getElementById("psw").value*@
+
+    btn.addEventListener("click", e => {
+
+        console.log(document.getElementById('nombre').value);
+        console.log(document.getElementById('psw').value);
+
+        $.get('/login/VerificarLog/?name=' + document.getElementById('nombre').value + '&psw=' + document.getElementById('psw').value, data => {
+            console.log(data)
+            if (data)
+                document.location.href = "/home/index";
+            else
+                document.getElementById('errorLogin').classList.add('actE');
+
+
+            })
+        
+    })
+
+
+    </script>
