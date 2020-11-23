@@ -1748,9 +1748,6 @@
         "dependencies": {
           "Microsoft.NETCore.Platforms": "3.1.0",
           "Microsoft.Win32.SystemEvents": "4.7.0"
-        },
-        "compile": {
-          "ref/netcoreapp3.0/System.Drawing.Common.dll": {}
         }
       },
       "System.Dynamic.Runtime/4.0.11": {

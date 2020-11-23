@@ -12,7 +12,6 @@ using iText.Layout.Element;
 using Microsoft.AspNetCore.Mvc;
 using parking.Models;
 using Parking.helper;
-using QRCoder;
 using parking.DataTransferObjects;
 
 namespace parking.Controllers
@@ -299,7 +298,7 @@ namespace parking.Controllers
                     Paragraph c3 = new Paragraph("Fecha Ingreso: " + nuevo.fechaI);
                     Paragraph cE = new Paragraph(" _______________ ");
                     Paragraph c4 = new Paragraph("Por Favor NO DOBLE ni ARRUGE este tickete");
-                    BarcodeQRCode brQR = new BarcodeQRCode(nuevo.id.ToString() + "=>" + nuevo.horaI +"=>"+nuevo.horaI);
+                    BarcodeQRCode brQR = new BarcodeQRCode(nuevo.id.ToString() + "=>" + nuevo.fechaI +"=>"+nuevo.horaI);
                     Image imgQR = new Image(brQR.CreateFormXObject(pdfDoc));
                     //agrego estilos
                     c1.SetFontSize(10);
