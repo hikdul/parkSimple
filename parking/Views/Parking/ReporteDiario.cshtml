@@ -8,14 +8,32 @@
 <div class="container">
     <hr />
     <div class="row">
+      
         <div class="col-12">
-            <input type="date" id="fechaInicial" />
-            <input type="date" id="fechafinal" />
-        </div>
-        <div class="col-12">
-                <h2 class="control-label formulario__label text-center"> Reporte de @DateTime.Now.ToString("dd/MM/yyyy")  </h2>
+                <h2 class="control-label formulario__label text-center"> Reporte echo el @DateTime.Now.ToString("dd/MM/yyyy")  </h2>
                 <div class="formulario" id="formulario">
+                   <!--botones y busquedas -->
+                    <div class="form-group ormulario__grupo formulario__grupo-btn-enviar">
 
+                        <div class="contFechas">
+                            <div class="fecha1">
+                                @*value="@DateTime.Now.ToString("yyyy-MM-dd")"*@
+                                <label class="labelFecha control-label formulario__label text-center">Desde </label>
+                                <input type="date" id="fechaI" min="2020-11-20" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                            </div>
+                            <div class="fecha2">
+                                <label class="labelFecha control-label formulario__label text-center">Hasta </label>
+                                <input type="date" id="fechaO" min="2020-11-20" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                            </div>
+                            <div class="fecha3 btnFechas">
+                                
+
+                                <a  asp-controller="Parking" asp-action="ReporteDiario" class="btn btn-info text-light">Calcular</a>
+                                 <a asp-controller="Parking" asp-action="ReporteDiarioPDF" target="_blank" class="formulario__btnU btn btn-info"> PDF </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- valores a buscar-->
                     <div class="form-group formulario__grupo">
                         <label class="control-label formulario__label text-center">   @Html.DisplayNameFor(model => model.VehiculosIngresadosHoy)</label>
                         <div class="formulario__grupo-input">
@@ -46,9 +64,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group ormulario__grupo formulario__grupo-btn-enviar">
-                        <a asp-controller="Parking" asp-action="ReporteDiarioPDF" target="_blank"  class="formulario__btn btn btn-info"> PDF </a>
-                    </div>
+
 
                 </div>
         </div>
@@ -98,3 +114,21 @@
 
         </div>
 </div>
+
+
+<script>
+
+    @*let fi = document.getElementById('fechaInicial')
+    let ff = document.getElementById('fechafinal')
+
+    window.onload() = ()=> {
+        fechasActuales()
+    }
+
+    const fechasActuales = () => {
+        fi.value = Date.now()
+        ff.value = Date.now()
+    }*@
+
+
+</script>

@@ -109,6 +109,17 @@ namespace Parking.Context
 
         #region Vehiculo o parking
 
+        //getListaFechas
+
+        internal async Task<List<vehiculo>> getListaVehiculoFechas(string fi,string fo)
+        {
+            SqlParameter[] parametros = new SqlParameter[2];
+            parametros[0] = new SqlParameter("@fechai", fi);
+            parametros[1] = new SqlParameter("@fechao", fo);
+
+            return await CustomProcedures.GetAllByParameter<vehiculo>("getListaFechas", conn, parametros);
+        }
+
         internal async Task<List<vehiculo>> GetTodo()
         {
             return await CustomProcedures.GetAll<vehiculo>("getParkTodo", conn);

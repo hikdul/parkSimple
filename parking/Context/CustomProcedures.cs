@@ -13,6 +13,45 @@ namespace Parking.Context
     public static class CustomProcedures
     {
 
+        //SqlParameter[] parametros
+
+        public static async Task<List<T>> GetAllByParameter<T>(string StoreProcedure, string _conex, SqlParameter[] parametros) where T : class, new()
+        {
+            var respose = new List<T>();
+            try
+            {
+                using (SqlConnection sql = new SqlConnection(_conex))
+                {
+                    using (SqlCommand cmd = new SqlCommand(StoreProcedure, sql))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        foreach (var item in parametros)
+                        {
+                            cmd.Parameters.Add(item);
+                        }
+                        await sql.OpenAsync();
+
+                        using (var lector = await cmd.ExecuteReaderAsync())
+                        {
+
+                            while (await lector.ReadAsync())
+                            {
+                                var newObjeto = new T();
+                                MapDataToObject(lector, newObjeto);
+                                respose.Add(newObjeto);
+
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return respose;
+        }
         /// <summary>
         /// para obetener todos los elementos de uns tabla de una lista 
         /// O para store procedures que devuelvan una lista de elementos del tipo T

@@ -19,6 +19,25 @@ namespace parking.Controllers
         /// </summary>
         ApplicationBDContextAux BD;
 
+        /// <summary>
+        /// para retornar una lista de elementos contenido estre dos fechas
+        /// aqui ya se asaume que la fehas o son iguales o fi > fo
+        /// fi > fo
+        /// </summary>
+        /// <param name="fi"></param>
+        /// <param name="fo"></param>
+        /// <returns></returns>
+
+        [HttpGet("todo/fechas")]
+        public async Task<List<vehiculo>> GetPorFechas(string fechaI, string fechaO)
+        {
+            BD = new ApplicationBDContextAux();
+            return await BD.getListaVehiculoFechas(fechaI, fechaO);
+        }
+        /// <summary>
+        /// retorna una lista del total de elementos existentes en la tabla de base de datos
+        /// </summary>
+        /// <returns></returns>
 
         [HttpGet("todo")]
         public async Task<List<vehiculo>> GetTodo()
