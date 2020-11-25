@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using parking.Models;
 using Parking.helper;
 using parking.DataTransferObjects;
+using OfficeOpenXml;
 
 namespace parking.Controllers
 {
@@ -467,6 +468,85 @@ namespace parking.Controllers
                 return null;
             }
         }
+
+        // =========================== ### ===========================
+        // imprecion en Xml o Excel
+        // =========================== ### ===========================
+
+        public FileResult GenerarReporteEntreFechasXml(string fechaI, string fechaO)
+        {
+
+            try {
+
+                List<vehiculo> Lista = HttpSolicitudes.GetList<vehiculo>(_url + "/todo/fechas?fechaI=" + fechaI + "&fechaO=" + fechaO);
+
+                string[] NombrePropiedades = new string[] { "id", "costo", "fechaI", "horaI", "fechaO", "horaO" };
+                string[] Cabeceras = new string[] { "id", "Costo", "Fecha Ingreso", "Hora Ingreso", "Fecha Salida", "Hora Salida", "Cobrado" };
+
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    using (ExcelPackage ep = new ExcelPackage())
+                    {
+                        ep.Workbook.Worksheets.Add("hoja");
+                        ExcelWorksheet ew = ep.Workbook.Worksheets[0];
+                        //primero irian mis cabeceras
+                        for (int i = 0; i < Cabeceras.Length; i++)
+                        {
+                            ew.Cells[1, i + 1].Value = Cabeceras[i];
+                            ew.Column(i + 1).Width = 25;
+                        }
+                        //ahora vamos con el contenido
+                        int fila = 2;
+                        int columna = 1;
+
+                        //foreach(var item in lista)
+
+                        foreach (var item in Lista)
+                        {
+                            columna = 1;
+                            foreach (string propiedad in NombrePropiedades)
+                            {
+                                ew.Cells[fila, columna].Value = item.GetType().GetProperty(propiedad).GetValue(item).ToString();
+                                columna++;
+                            }
+                            ew.Cells[fila, columna].Value = CalcularCosto(item).MontoAPagar.ToString() + " S/.";
+
+                            fila++;
+                        }
+
+
+                        ReporteDiario _rep = ReporteEntreFechas(fechaI, fechaO);
+
+
+
+                       
+                        fila++;
+                        ew.Cells[fila, 1].Value = "Total Vehiculos";
+                        ew.Cells[fila, 2].Value = _rep.totalVehiculos.ToString();
+                       
+                        fila++;
+                        ew.Cells[fila, 1].Value = "Total Dinero Recaudado";
+                        ew.Cells[fila, 2].Value = _rep.cantidadDineroHoy.ToString()+ " S/.";
+
+
+
+                        ep.SaveAs(ms);
+                        Byte[] buffer = ms.ToArray();
+                        //return buffer;
+                        return File(buffer.ToArray(), "application/xml");
+                    }
+                }
+            }
+            catch
+            {
+                ViewBag.error = "problemas en la coneccion sa base de datos";
+                return null;
+            }
+            
+            }
+
 
 
         // =========================== ### ===========================

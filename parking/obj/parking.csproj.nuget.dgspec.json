@@ -38,6 +38,10 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "EPPlus": {
+              "target": "Package",
+              "version": "[5.4.2, )"
+            },
             "FastMember": {
               "target": "Package",
               "version": "[1.5.0, )"

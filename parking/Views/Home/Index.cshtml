@@ -1,8 +1,36 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model parking.DataTransferObjects.ReporteDiario
+
+@{
+    ViewData["Title"] = "Index";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+<div class="row">
+    <div class="col-12">
+
+        <div class="form-group formulario__grupo">
+            <label class="control-label formulario__label text-center">  Vehiculos Que Indresaron Hoy Dia </label>
+            <div class="formulario__grupo-input">
+                <h3 id="VehiculosIngresadosHoy" class="text-center">  @Html.DisplayFor(model => model.VehiculosIngresadosHoy) </h3>
+            </div>
+        </div>
+
+       
+
+        <div class="form-group formulario__grupo">
+            <label class="control-label formulario__label text-center">  Vehiculos Que Han Salido Hoy Dia </label>
+            <div class="formulario__grupo-input">
+                <h3 id="VehiculosQueHanSalido" class="text-center">                  @Html.DisplayFor(model => model.VehiculosQueHanSalido)  </h3>
+            </div>
+        </div>
+
+        <div class="form-group formulario__grupo">
+            <label class="control-label formulario__label text-center">    Vehiculos Que Aun Se Encuentran En El Parking  </label>
+            <div class="formulario__grupo-input">
+                <h3 id="VehiculosQueNoHanSalido" class="text-center">                  @Html.DisplayFor(model => model.VehiculosQueNoHanSalido)  </h3>
+            </div>
+        </div>
+
+    </div>
 </div>
+

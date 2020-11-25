@@ -10,7 +10,7 @@
     <div class="row">
       
         <div class="col-12">
-                <h2 class="control-label formulario__label text-center"> Reporte echo el @DateTime.Now.ToString("dd/MM/yyyy")  </h2>
+                <h2 class="control-label formulario__label text-center"> Reporte hecho el @DateTime.Now.ToString("dd/MM/yyyy")  </h2>
                 <div class="formulario" id="formulario">
                     <!--botones y busquedas -->
                         <div class="form-group ormulario__grupo formulario__grupo-btn-enviar">
@@ -31,6 +31,7 @@
                                     <buttom id="btnReporteEntreFechas" class="btn btn-info text-light">Calcular</buttom>
                                     @*<a asp-controller="Parking" asp-action="ReporteEntreFechasPDF" target="_blank" class="formulario__btnU btn btn-info"> PDF </a>*@
                                     <buttom  id="btnReporteEntreFechasPDF" class="formulario__btnU btn btn-info"> PDF </buttom>
+                                    <buttom  id="btnGenerarReporteEntreFechasXml" class="formulario__btnU btn btn-info"> XML </buttom>
                                 </div>
                             </div>
                         </div>
@@ -129,6 +130,7 @@
 
     const btnReporteEntreFechas = document.getElementById("btnReporteEntreFechas");
     const btnReporteEntreFechasPDF = document.getElementById('btnReporteEntreFechasPDF');
+    const btnGenerarReporteEntreFechasXml = document.getElementById('btnGenerarReporteEntreFechasXml');
 
     // ============ ### ============
     // Organizo las fechas para que me las entienda C#
@@ -180,7 +182,7 @@
 
     });
 
-    btnReporteEntreFechasPDF.addEventListener('click',() => {
+    btnReporteEntreFechasPDF.addEventListener('click', () => {
         let fi = document.getElementById("fechaI").value;
         let fo = document.getElementById("fechaO").value
 
@@ -196,9 +198,30 @@
             window.open(data, '_blank');
         });*@
 
-    })
-    
+    });
 
+    btnGenerarReporteEntreFechasXml.addEventListener('click', () => {
+
+       
+
+        let fi = document.getElementById("fechaI").value;
+        let fo = document.getElementById("fechaO").value
+
+
+        fi = cambiarFormatoFecha(fi);
+        fo = cambiarFormatoFecha(fo);
+
+        console.log(fi + " " + fo);
+
+        var a = document.createElement("a");
+        a.href = `GenerarReporteEntreFechasXml?fechaI=${fi}&fechaO=${fo}`;
+        a.download = "reporte.xml";
+        a.click();
+
+      
+
+
+    });
 
 
 

@@ -17,7 +17,7 @@ namespace parking.DataTransferObjects
         public int VehiculosQueHanSalido { get; set; }
         [Display(Name = "Vehiculos Que Se Encuentran Estacionados")]
         public int VehiculosQueNoHanSalido { get; set; }
-        [Display(Name = "Dinero S/. Recojido")]
+        [Display(Name = "Dinero S/. Recaudado")]
         public double cantidadDineroHoy { get; set; }
         [Display(Name = "Referencia De Costos")]
         public Costo costosUsados { get; set; }
