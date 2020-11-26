@@ -19,6 +19,9 @@ namespace parking.Controllers
 {
     public class ParkingController : Controller
     {
+
+        #region declaraciones Iniciales
+
         /// <summary>
         /// url de la unbicacion de mi api rest
         /// </summary>
@@ -29,8 +32,10 @@ namespace parking.Controllers
         private readonly string _urlCosto = "https://localhost:44306/API/CostoApi";
 
 
-        
+        #endregion
 
+
+        #region Vistas
         // =========================== ### ===========================
         // mis vistas
         // =========================== ### ===========================
@@ -65,7 +70,9 @@ namespace parking.Controllers
                 return View();
             
         }
+        #endregion
 
+        #region reportes
         // =========================== ### ===========================
         // Reportes Diaros
         // =========================== ### ===========================
@@ -228,6 +235,9 @@ namespace parking.Controllers
             }
         }
 
+        #endregion
+
+        #region impreciones
         // =========================== ### ===========================
         // impresiones en PDF
         // =========================== ### ===========================
@@ -336,6 +346,8 @@ namespace parking.Controllers
                         //agrego datos
                         Paragraph c1 = new Paragraph("Salida Vehicular");
                         Paragraph c2 = new Paragraph("Tiempo Total: " + inf.tiempoTotal);
+                        Paragraph c6 = new Paragraph("Horas Sab/Dom: " + inf.horasFinDeSemana);
+
                         Paragraph c3 = new Paragraph("horas Diurnas: " + inf.horasDiurnas);
                         Paragraph c4 = new Paragraph("Horas Nocturnas: " + inf.horasNocturnas);
                         Paragraph c5 = new Paragraph("Monto A Pagar: " + inf.MontoAPagar);
@@ -345,6 +357,8 @@ namespace parking.Controllers
                         c1.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
                         c2.SetFontSize(10);
                         c2.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
+                        c6.SetFontSize(10);
+                        c6.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
                         c3.SetFontSize(10);
                         c3.SetTextAlignment(iText.Layout.Properties.TextAlignment.CENTER);
                         c4.SetFontSize(10);
@@ -355,6 +369,7 @@ namespace parking.Controllers
                         //agrego al documento
                         doc.Add(c1);
                         doc.Add(c2);
+                        doc.Add(c6);
                         doc.Add(c3);
                         doc.Add(c4);
                         doc.Add(c5);
@@ -548,7 +563,9 @@ namespace parking.Controllers
             }
 
 
+        #endregion
 
+        #region calculos
         // =========================== ### ===========================
         // componentes de comunicacion
         // =========================== ### ===========================
@@ -683,13 +700,17 @@ namespace parking.Controllers
                 //calcular dias
                 int days = Int32.Parse(valores[0].Substring(0, 2));
 
+                int weekend = HorasFinDeSemanaEntreDosFechas(vehiculo);
+
                 int totalhoras = days * 24 + hours;
-                int horasNocturnas = tiempoNocturno(vehiculo);
-                int horasDiurnas = totalhoras - horasNocturnas;
+                
+                int horasNocturnas = (tiempoNocturno(vehiculo) < 0 ) ? 0 : tiempoNocturno(vehiculo);
+                int horasDiurnas = (totalhoras - horasNocturnas - weekend) < 0 ? 0 : totalhoras - horasNocturnas - weekend;
                 //suma de horas por su costo 
 
-                valorACobrar += horasNocturnas * costo.nocturno;
-                valorACobrar += horasDiurnas * costo.hora;
+                valorACobrar = (horasNocturnas * costo.nocturno) + (horasDiurnas * costo.hora) + (weekend * costo.weeekend);
+                //valorACobrar += horasDiurnas * costo.hora;
+                //valorACobrar += weekend * costo.weeekend;
 
                 //fracion en minutos
 
@@ -723,6 +744,7 @@ namespace parking.Controllers
                     tiempoTotal = Htotales,
                     horasDiurnas = horasDiurnas,
                     horasNocturnas = horasNocturnas,
+                    horasFinDeSemana = weekend,
                     MontoAPagar = valorACobrar
                 };
 
@@ -1047,8 +1069,71 @@ namespace parking.Controllers
                 ViewBag.error = "Error Al Obtener Horas Nocturnas";
                 return 0;
             }
-        } 
-      
+        }
+        #endregion
 
-}
+        #region calculo fines de semana
+
+        private int HorasFinDeSemanaEntreDosFechas(vehiculo vehiculo)
+        {
+
+            //DateTime diaI = new DateTime(Int32.Parse(fechaI.Substring(6,4)), Int32.Parse(fechaI.Substring(3, 2)), Int32.Parse(fechaI.Substring(0, 2)));
+            //DateTime diaO = new DateTime(Int32.Parse(fechaO.Substring(6,4)), Int32.Parse(fechaO.Substring(3, 2)), Int32.Parse(fechaO.Substring(0, 2) ) );
+            string[] diaI = vehiculo.fechaI.Split("-") == null ? vehiculo.fechaI.Split("-") : vehiculo.fechaI.Split('/');
+            string[] diaF = vehiculo.fechaO.Split("-") == null ? vehiculo.fechaO.Split("-") : vehiculo.fechaO.Split('/');
+            string[] hi = vehiculo.horaI.Split(":");
+            string[] ho = vehiculo.horaO.Split(":");
+
+
+            DateTime inicio = new DateTime(Int32.Parse(diaI[2]), Int32.Parse(diaI[1]), Int32.Parse(diaI[0]), Int32.Parse(hi[0]), Int32.Parse(hi[1]), 0);
+            DateTime final = new DateTime(Int32.Parse(diaF[2]), Int32.Parse(diaF[1]), Int32.Parse(diaF[0]),Int32.Parse(ho[0]),Int32.Parse(ho[1]),0);
+
+            int contadoDeDias = 0;
+            int contadorDeHoras = 0;
+
+            if (inicio == final) {
+                if ((int)inicio.DayOfWeek == 0 || (int)inicio.DayOfWeek == 6)
+                    return (inicio - final).Hours;
+            }
+            else
+            {
+                DateTime dia = inicio;
+                do
+                {
+
+                    if ((int)dia.DayOfWeek == 0 || (int)dia.DayOfWeek == 6)
+                    {
+                        contadoDeDias++;
+                        //aqui hay que contar son las horas
+                    }
+
+                    dia = dia.AddDays(1);
+
+                } while (dia <= final);
+
+                if ((int)inicio.DayOfWeek == 0 || (int)inicio.DayOfWeek == 6)
+                {
+                    contadoDeDias--;
+                    contadorDeHoras = 24 - Int32.Parse(hi[0]);
+
+                }
+                if ((int)final.DayOfWeek == 0 || (int)final.DayOfWeek == 6)
+                {
+                    contadoDeDias--;
+                    contadorDeHoras += Int32.Parse(ho[0]);
+                }
+
+                contadorDeHoras += contadoDeDias * 24; 
+
+
+            }
+
+            return contadorDeHoras;
+
+        }
+
+        #endregion
+
+
+    }
 }

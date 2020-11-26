@@ -40,6 +40,11 @@ namespace parking.Models
         [Display(Name = "Costo S/. Hora Nocturna")]
         public double nocturno { get; set; }
 
+        [floatante]
+        [Required]
+        [Display(Name = "Costo S/. Hora Fin De Semana")]
+        public double weeekend { get; set; }
+
         public bool activo { get; set; }
 
     }

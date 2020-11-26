@@ -1,6 +1,5 @@
 D:\Proyectos con Luis\proyecto3Simple\parking\parking\bin\Debug\netcoreapp3.1\appsettings.Development.json
 D:\Proyectos con Luis\proyecto3Simple\parking\parking\bin\Debug\netcoreapp3.1\appsettings.json
-D:\Proyectos con Luis\proyecto3Simple\parking\parking\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
 D:\Proyectos con Luis\proyecto3Simple\parking\parking\bin\Debug\netcoreapp3.1\parking.exe
 D:\Proyectos con Luis\proyecto3Simple\parking\parking\bin\Debug\netcoreapp3.1\parking.deps.json
 D:\Proyectos con Luis\proyecto3Simple\parking\parking\bin\Debug\netcoreapp3.1\parking.runtimeconfig.json
@@ -194,3 +193,4 @@ D:\Proyectos con Luis\proyecto3Simple\parking\parking\bin\Debug\netcoreapp3.1\ru
 D:\Proyectos con Luis\proyecto3Simple\parking\parking\obj\Debug\netcoreapp3.1\parking.csproj.CoreCompileInputs.cache
 D:\Proyectos con Luis\proyecto3Simple\parking\parking\obj\Debug\netcoreapp3.1\parking.MvcApplicationPartsAssemblyInfo.cache
 D:\Proyectos con Luis\proyecto3Simple\parking\parking\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs
+D:\Proyectos con Luis\proyecto3Simple\parking\parking\obj\Debug\netcoreapp3.1\scopedcss\bundle\parking.styles.css

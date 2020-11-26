@@ -44,10 +44,11 @@ namespace Parking.Context
         {
             if (costo == null)
                 return false;
-
-            SqlParameter[] parametros = new SqlParameter[6];
+            //weeekend
+            SqlParameter[] parametros = new SqlParameter[7];
             parametros[0] = new SqlParameter("@nombre", costo.nombre);
             parametros[1] = new SqlParameter("@hora", costo.hora);
+            parametros[6] = new SqlParameter("@weeekend", costo.weeekend);
             parametros[2] = new SqlParameter("@f30", costo.f30);
             parametros[3] = new SqlParameter("@f15", costo.f15);
             parametros[4] = new SqlParameter("@f5", costo.f5);
@@ -78,14 +79,17 @@ namespace Parking.Context
 
         internal async Task<bool> putCosto(int id, Costo costo)
         {
-            SqlParameter[] parametros = new SqlParameter[7];
-            parametros[6] = new SqlParameter("@id", id);
+            SqlParameter[] parametros = new SqlParameter[8];
             parametros[0] = new SqlParameter("@nombre", costo.nombre);
             parametros[1] = new SqlParameter("@hora", costo.hora);
             parametros[2] = new SqlParameter("@f30", costo.f30);
             parametros[3] = new SqlParameter("@f15", costo.f15);
             parametros[4] = new SqlParameter("@f5", costo.f5);
             parametros[5] = new SqlParameter("@nocturno", costo.nocturno);
+            parametros[6] = new SqlParameter("@id", id);
+            parametros[7] = new SqlParameter("@weeekend", costo.weeekend);
+
+            //weeekend
 
             return await CustomProcedures.ProcedureBoolean<Costo>("putCosto", conn, parametros);
         }

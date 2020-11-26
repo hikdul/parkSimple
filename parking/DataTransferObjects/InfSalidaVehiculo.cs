@@ -11,6 +11,7 @@ namespace parking.DataTransferObjects
         public string tiempoTotal { get; set; }
         public int horasNocturnas { get; set; }
         public int horasDiurnas { get; set; }
+        public int horasFinDeSemana { get; set; }
         public double MontoAPagar { get; set; }
 
     }
