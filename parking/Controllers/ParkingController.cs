@@ -1114,16 +1114,17 @@ namespace parking.Controllers
                 if ((int)inicio.DayOfWeek == 0 || (int)inicio.DayOfWeek == 6)
                 {
                     contadoDeDias--;
-                    contadorDeHoras = 24 - Int32.Parse(hi[0]);
+                    contadorDeHoras = ((20 - Int32.Parse(hi[0])) > 0) ? (20 - Int32.Parse(hi[0])) : 0;
 
                 }
                 if ((int)final.DayOfWeek == 0 || (int)final.DayOfWeek == 6)
                 {
                     contadoDeDias--;
-                    contadorDeHoras += Int32.Parse(ho[0]);
+                    if(Int32.Parse(ho[0]) < 20  && Int32.Parse(ho[0]) > 7)
+                        contadorDeHoras += Int32.Parse(ho[0]) - 7 ;
                 }
 
-                contadorDeHoras += contadoDeDias * 24; 
+                contadorDeHoras += contadoDeDias * 13; 
 
 
             }
